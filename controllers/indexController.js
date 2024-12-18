@@ -2,7 +2,7 @@
 
 // Index
 function index(req, res) {
-    res.send("API Test");
+    res.render("index", { title: "Dashboard" });
 }
 
 module.exports = {
