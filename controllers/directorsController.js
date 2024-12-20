@@ -5,34 +5,45 @@ const db = require("../db/queries");
 
 // Get All Directors
 async function getDirectors(req, res) {
-    res.send("Not implemented yet");
+    let directors = await db.selectDirectors();
+    res.render("directors", { title: "All Directors", directors: directors });
 }
 
 // Create Director
 async function createDirector(req, res) {
-    res.send("Not implemented yet");
+    await db.insertDirector(req.body.name);
+    res.redirect("/directors");
 }
 
 // Get Director
 async function getDirector(req, res) {
+    let director = await db.selectDirector(req.params.directorId);
+    res.send("Not implemented yet");
+}
+
+// Edit Director
+async function editDirector(req, res) {
+    let director = await db.selectDirector(req.params.directorId);
     res.send("Not implemented yet");
 }
 
 // Update Director
 async function updateDirector(req, res) {
-    res.send("Not implemented yet");
+    await db.updateDirector(req.params.directorId, req.body.name);
+    res.redirect("/directors");
 }
 
 // Delete Director
 async function deleteDirector(req, res) {
-    await db.deleteDirector();
-    res.redirect("/");
+    await db.deleteDirector(req.params.directorId);
+    res.redirect("/directors");
 }
 
 module.exports = {
     getDirectors,
     createDirector,
     getDirector,
+    editDirector,
     updateDirector,
     deleteDirector,
 };
