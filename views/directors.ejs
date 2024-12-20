@@ -1,0 +1,27 @@
+<!-- views/directors.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('header'); -%>
+        <main>
+            <h1><%= title %></h1>
+            <ul>
+                <% if (directors) {directors.forEach(function(director) { %>
+                <a href= <%= `/directors/${director.id}` %> >
+                    <li>Genre: <%= director.name %> </li>
+                </a>
+                <% }); } %>
+            </ul>
+            <h2>Add New Director</h2>
+            <form action="/directors" method="POST">
+                <label for="name">Director: </label>
+                <input type="text" name="name" id="name" required />
+                <button type="submit">Submit</button>
+            </form>
+        </main>
+        <%- include('footer'); -%>
+    </body>
+</html>

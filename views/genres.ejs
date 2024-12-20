@@ -1,0 +1,27 @@
+<!-- views/genres.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('header'); -%>
+        <main>
+            <h1><%= title %></h1>
+            <ul>
+                <% if (genres) {genres.forEach(function(genre) { %>
+                <a href= <%= `/genres/${genre.id}` %> >
+                    <li>Genre: <%= genre.genre %> </li>
+                </a>
+                <% }); } %>
+            </ul>
+            <h2>Add New Genre</h2>
+            <form action="/genres" method="POST">
+                <label for="genre">Genre: </label>
+                <input type="text" name="genre" id="genre" required />
+                <button type="submit">Submit</button>
+            </form>
+        </main>
+        <%- include('footer'); -%>
+    </body>
+</html>
