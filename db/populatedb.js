@@ -10,20 +10,41 @@ if (argv[2]) {
 
 const { Client } = require("pg");
 
-/*
 const SQL = `
 CREATE TABLE IF NOT EXISTS movies (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title TEXT
+  title TEXT,
+  yr_released INTEGER
 );
 
-INSERT INTO movies (title) 
+INSERT INTO movies (title, yr_released) 
 VALUES
-  ('Bryan'),
-  ('Odin'),
-  ('Damon');
+  ('Movie 1', 1990),
+  ('Movie 2', 2012),
+  ('Movie 3', 2024);
+
+CREATE TABLE IF NOT EXISTS genres (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  genre TEXT
+);
+
+INSERT INTO genres (genre) 
+VALUES
+  ('Action'),
+  ('Adventure'),
+  ('Sci-Fi');
+
+CREATE TABLE IF NOT EXISTS directors (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name TEXT
+);
+
+INSERT INTO directors (name) 
+VALUES
+  ('Director 1'),
+  ('Director 2'),
+  ('Director 3');
 `;
-*/
 
 async function main() {
     console.log("seeding...");
