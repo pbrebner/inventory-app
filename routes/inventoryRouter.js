@@ -18,9 +18,11 @@ inventoryRouter.post("/movies", moviesController.createMovie);
 
 inventoryRouter.get("/movies/:movieId", moviesController.getMovie);
 
-inventoryRouter.put("/movies/:movieId", moviesController.updateMovie);
+inventoryRouter.get("/movies/:movieId/edit", moviesController.editMovie);
 
-inventoryRouter.delete("/movies/:movieId", moviesController.deleteMovie);
+inventoryRouter.post("/movies/:movieId/update", moviesController.updateMovie);
+
+inventoryRouter.post("/movies/:movieId/delete", moviesController.deleteMovie);
 
 // Genre Routes
 
@@ -30,9 +32,11 @@ inventoryRouter.post("/genres", genresController.createGenre);
 
 inventoryRouter.get("/genres/:genreId", genresController.getGenre);
 
-inventoryRouter.put("/genres/:genreId", genresController.updateGenre);
+inventoryRouter.get("/genres/:geneId/edit", moviesController.editGenre);
 
-inventoryRouter.delete("/genres/:genreId", genresController.deleteGenre);
+inventoryRouter.post("/genres/:genreId/update", genresController.updateGenre);
+
+inventoryRouter.post("/genres/:genreId/delete", genresController.deleteGenre);
 
 // Director Routes
 
@@ -42,13 +46,18 @@ inventoryRouter.post("/directors", directorsController.createDirector);
 
 inventoryRouter.get("/directors/:directorId", directorsController.getDirector);
 
-inventoryRouter.put(
-    "/directors/:directorId",
+inventoryRouter.get(
+    "/directors/:directorId/edit",
+    moviesController.editDirector
+);
+
+inventoryRouter.post(
+    "/directors/:directorId/update",
     directorsController.updateDirector
 );
 
-inventoryRouter.delete(
-    "/directors/:directorId",
+inventoryRouter.post(
+    "/directors/:directorId/delete",
     directorsController.deleteDirector
 );
 
