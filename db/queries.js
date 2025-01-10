@@ -1,6 +1,6 @@
 const pool = require("./pool");
 
-// Movie Queries
+// MOVIE QUERIES
 
 async function selectMovies() {
     // Deconstruction to get the rows value from the query object (returns list of objects)
@@ -33,7 +33,7 @@ async function deleteMovie(movieId) {
     await pool.query("DELETE FROM movies WHERE id = ($1)", [movieId]);
 }
 
-// Genre Queries
+// GENRE QUERIES
 
 async function selectGenres() {
     const { rows } = await pool.query("SELECT * FROM genres");
@@ -62,7 +62,7 @@ async function deleteGenre(genreId) {
     await pool.query("DELETE FROM genres WHERE id = ($1)", [genreId]);
 }
 
-// Director Queries
+// DIRECTOR QUERIES
 
 async function selectDirectors() {
     const { rows } = await pool.query("SELECT * FROM directors");
