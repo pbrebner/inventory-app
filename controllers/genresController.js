@@ -1,51 +1,88 @@
 // controllers/genresController.js
 
 const { body, validationResult } = require("express-validator");
+const asyncHandler = require("express-async-handler");
 const db = require("../db/queries");
 
+const validateGenre = [
+    body("genre")
+        .trim()
+        .isLength({ min: 1, max: 100 })
+        .withMessage("Genre must be between 1 and 100 characters")
+        .escape(),
+];
+
 // Get All Genres
-async function getGenres(req, res) {
+exports.getGenres = asyncHandler(async (req, res, next) => {
     let genres = await db.selectGenres();
-    res.render("genres", { title: "All Genres", genres: genres });
-}
+    res.render("genres", { title: "All Genres", genres: genres, errors: [] });
+});
 
 // Create Genre
-// TODO: SANITIZE AND VALIDATE INPUTS
-async function createGenre(req, res) {
-    await db.insertGenre(req.body.genre);
-    res.redirect("/genres");
-}
+exports.createGenre = [
+    validateGenre,
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // Error Occured
+            // Don't like having to query again
+            let genres = await db.selectGenres();
+            res.render("genres", {
+                title: "All Genres",
+                genres: genres,
+                genreEntry: {
+                    genre: req.body.genre,
+                },
+                errors: errors.array(),
+            });
+        } else {
+            await db.insertGenre(req.body.genre);
+            res.redirect("/genres");
+        }
+    }),
+];
 
 // Get Genre
-async function getGenre(req, res) {
+exports.getGenre = asyncHandler(async (req, res, next) => {
     let genre = await db.selectGenre(req.params.genreId);
-    res.send("Not implemented yet");
-}
+    res.render("genre", {
+        title: `${movie[0].genre}`,
+        genre: genre[0],
+    });
+});
 
 // Edit Genre
-async function editGenre(req, res) {
+exports.editGenre = asyncHandler(async (req, res, next) => {
     let genre = await db.selectGenre(req.params.genreId);
-    res.send("Not implemented yet");
-}
+    res.render("editGenre", {
+        title: "Edit Genre",
+        genre: genre[0],
+        errors: [],
+    });
+});
 
 // Update Genre
-// TODO: SANITIZE AND VALIDATE INPUTS
-async function updateGenre(req, res) {
-    await db.updateGenre(req.params.genreId, req.body.genre);
-    res.redirect("/genres");
-}
+exports.updateGenre = [
+    validateGenre,
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.render("editGenre", {
+                title: "Edit Genre",
+                genre: { genre: req.body.genre },
+                errors: errors.array(),
+            });
+        } else {
+            await db.updateGenre(req.params.genreId, req.body.genre);
+            res.redirect("/genres");
+        }
+    }),
+];
 
 // Delete Genre
-async function deleteGenre(req, res) {
+exports.deleteGenre = asyncHandler(async (req, res, next) => {
     await db.deleteGenre(req.params.genreId);
     res.redirect("/genres");
-}
-
-module.exports = {
-    getGenres,
-    createGenre,
-    getGenre,
-    editGenre,
-    updateGenre,
-    deleteGenre,
-};
+});
