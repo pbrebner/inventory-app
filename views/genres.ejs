@@ -22,7 +22,7 @@
             <h2>Add New Genre</h2>
             <form action="/genres" method="POST">
                 <label for="genre">Genre: </label>
-                <input type="text" name="genre" id="genre" required />
+                <input type="text" name="genre" id="genre" value= "<%= locals.genreEntry === undefined ? '' : genreEntry.genre %>"/>
                 <button type="submit">Submit</button>
             </form>
             <% if (errors) { %>

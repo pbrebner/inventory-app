@@ -47,7 +47,7 @@ exports.createGenre = [
 exports.getGenre = asyncHandler(async (req, res, next) => {
     let genre = await db.selectGenre(req.params.genreId);
     res.render("genre", {
-        title: `${movie[0].genre}`,
+        title: `${genre[0].genre}`,
         genre: genre[0],
     });
 });

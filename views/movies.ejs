@@ -22,9 +22,9 @@
             <h2>Add New Movie</h2>
             <form action="/movies" method="POST">
                 <label for="title">Title: </label>
-                <input type="text" name="title" id="title" value= "<%= movieEntry ? movieEntry.title : '' %>"/>
+                <input type="text" name="title" id="title" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.title %>"/>
                 <label for="year">Year Released: </label>
-                <input type="text" name="year" id="year" value= "<%= movieEntry ? movieEntry.year : '' %>"/>
+                <input type="text" name="year" id="year" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.year %>"/>
                 <button type="submit">Submit</button>
             </form>
             <% if (errors) { %>

@@ -32,7 +32,7 @@ inventoryRouter.post("/genres", genresController.createGenre);
 
 inventoryRouter.get("/genres/:genreId", genresController.getGenre);
 
-inventoryRouter.get("/genres/:geneId/edit", genresController.editGenre);
+inventoryRouter.get("/genres/:genreId/edit", genresController.editGenre);
 
 inventoryRouter.post("/genres/:genreId/update", genresController.updateGenre);
 

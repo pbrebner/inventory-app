@@ -15,7 +15,11 @@ const validateDirector = [
 // Get All Directors
 exports.getDirectors = asyncHandler(async (req, res, next) => {
     let directors = await db.selectDirectors();
-    res.render("directors", { title: "All Directors", directors: directors });
+    res.render("directors", {
+        title: "All Directors",
+        directors: directors,
+        errors: [],
+    });
 });
 
 // Create Director
@@ -23,9 +27,6 @@ exports.createDirector = [
     validateDirector,
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
-
-        await db.insertDirector(req.body.name);
-        res.redirect("/directors");
 
         if (!errors.isEmpty()) {
             // Error Occured
