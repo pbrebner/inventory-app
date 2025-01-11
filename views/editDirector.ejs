@@ -1,0 +1,31 @@
+<!-- views/editDirector.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('header'); -%>
+        <main>
+            <h1><%= title %></h1>
+            <form action=<%= `/directors/${director.id}/update` %> method="POST">
+                <label for="name">Name: </label>
+                <input type="text" name="name" id="name" value="<%= director.name %>">
+                <button type="submit">Edit</button>
+            </form>
+            
+            <form action=<%= `/directors/${director.id}/delete` %> method="POST">
+                <button type="submit">Delete</button>
+            </form>
+            
+            <% if (errors) { %>
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li style="color: red;"><%= error.msg %></li>
+                    <% });%>
+                </ul>
+            <% } %>
+        </main>
+        <%- include('footer'); -%>
+    </body>
+</html>

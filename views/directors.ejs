@@ -8,19 +8,30 @@
         <%- include('header'); -%>
         <main>
             <h1><%= title %></h1>
-            <ul>
-                <% if (directors) {directors.forEach(function(director) { %>
-                <a href= <%= `/directors/${director.id}` %> >
-                    <li>Genre: <%= director.name %> </li>
-                </a>
-                <% }); } %>
-            </ul>
+            <% if (directors) { %>
+                <ul>
+                    <% directors.forEach(function(director) { %>
+                        <a href= <%= `/directors/${director.id}` %> >
+                            <li>Genre: <%= director.name %> </li>
+                        </a>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>There are no Directors in the Inventory</p>
+            <% } %>
             <h2>Add New Director</h2>
             <form action="/directors" method="POST">
                 <label for="name">Director: </label>
                 <input type="text" name="name" id="name" required />
                 <button type="submit">Submit</button>
             </form>
+            <% if (errors) { %>
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li style="color: red;"><%= error.msg %></li>
+                    <% });%>
+                </ul>
+            <% } %>
         </main>
         <%- include('footer'); -%>
     </body>

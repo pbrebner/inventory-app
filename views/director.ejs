@@ -1,0 +1,20 @@
+<!-- views/director.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('header'); -%>
+        <main>
+            <h1><%= title %></h1>
+            <p><%= director.name %></p>
+
+            <h2>Edit Director</h2>
+            <form action=<%= `/directors/${director.id}/edit` %> method="GET">
+                <button type="submit">Edit</button>
+            </form>
+        </main>
+        <%- include('footer'); -%>
+    </body>
+</html>
