@@ -8,24 +8,32 @@
         <%- include('header'); -%>
         <main>
             <h1><%= title %></h1>
-            <ul>
-                <% if (movies) {movies.forEach(function(movie) { %>
-                <a href= <%= `/movies/${movie.id}` %> >
-                    <li>Title: <%= movie.title %> (<%= movie.yr_released %>)</li>
-                </a>
-                <% }); } %>
-            </ul>
+            <% if (movies) { %>
+                <ul>
+                    <% movies.forEach(function(movie) { %>
+                        <a href= <%= `/movies/${movie.id}` %> >
+                            <li>Title: <%= movie.title %> (<%= movie.yr_released %>)</li>
+                        </a>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>There are no Movies in the Inventory</p>
+            <% } %>
             <h2>Add New Movie</h2>
             <form action="/movies" method="POST">
                 <label for="title">Title: </label>
-                <input type="text" name="title" id="title"/>
+                <input type="text" name="title" id="title" value= "<%= movieEntry ? movieEntry.title : '' %>"/>
                 <label for="year">Year Released: </label>
-                <input type="text" name="year" id="year"/>
+                <input type="text" name="year" id="year" value= "<%= movieEntry ? movieEntry.year : '' %>"/>
                 <button type="submit">Submit</button>
             </form>
-            <% if (errors) {errors.forEach(function(error) { %>
-                <p><%= error.msg %></p>
-            <% }); }%>
+            <% if (errors) { %>
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li style="color: red;"><%= error.msg %></li>
+                    <% });%>
+                </ul>
+            <% } %>
         </main>
         <%- include('footer'); -%>
     </body>

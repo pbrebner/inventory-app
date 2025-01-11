@@ -13,16 +13,20 @@ const validateMovie = [
     body("year")
         .trim()
         .isNumeric()
-        .withMessage("Must be numeric")
+        .withMessage("Year must be numeric")
         .isLength({ min: 4, max: 4 })
-        .withMessage("Must be valid 4 digit year")
+        .withMessage("Year must be a valid 4 digit year")
         .escape(),
 ];
 
 // Get All Movies
 exports.getMovies = asyncHandler(async (req, res, next) => {
     let movies = await db.selectMovies();
-    res.render("movies", { title: "All Movies", movies: movies });
+    res.render("movies", {
+        title: "All Movies",
+        movies: movies,
+        errors: [],
+    });
 });
 
 // Create Movie
@@ -66,6 +70,7 @@ exports.editMovie = asyncHandler(async (req, res, next) => {
     res.render("editMovie", {
         title: "Edit Movie",
         movie: movie[0],
+        errors: [],
     });
 });
 
