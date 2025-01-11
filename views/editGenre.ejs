@@ -1,0 +1,31 @@
+<!-- views/editGenre.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('header'); -%>
+        <main>
+            <h1><%= title %></h1>
+            <form action=<%= `/genres/${genre.id}/update` %> method="POST">
+                <label for="genre">Genre: </label>
+                <input type="text" name="genre" id="genre" value="<%= genre.genre %>">
+                <button type="submit">Edit</button>
+            </form>
+            
+            <form action=<%= `/genres/${genre.id}/delete` %> method="POST">
+                <button type="submit">Delete</button>
+            </form>
+            
+            <% if (errors) { %>
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li style="color: red;"><%= error.msg %></li>
+                    <% });%>
+                </ul>
+            <% } %>
+        </main>
+        <%- include('footer'); -%>
+    </body>
+</html>
