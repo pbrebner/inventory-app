@@ -11,18 +11,6 @@ if (argv[2]) {
 const { Client } = require("pg");
 
 const SQL = `
-CREATE TABLE IF NOT EXISTS movies (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title TEXT,
-  yr_released INTEGER
-);
-
-INSERT INTO movies (title, yr_released) 
-VALUES
-  ('Movie 1', 1990),
-  ('Movie 2', 2012),
-  ('Movie 3', 2024);
-
 CREATE TABLE IF NOT EXISTS genres (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   genre TEXT
@@ -44,6 +32,31 @@ VALUES
   ('Director 1'),
   ('Director 2'),
   ('Director 3');
+
+CREATE TABLE IF NOT EXISTS movies (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title TEXT,
+  yr_released INTEGER,
+  rating INTEGER,
+  director_id int REFERENCES directors ON DELETE SET NULL
+);
+
+INSERT INTO movies (title, yr_released, rating, director_id) VALUES
+  ('Movie 1', 1990, 8, 1),
+  ('Movie 2', 2012, 5, 2),
+  ('Movie 3', 2024, 7, 3);
+
+CREATE TABLE IF NOT EXISTS movieGenres (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  movie_id int REFERENCES movies ON DELETE SET NULL,
+  genre_id int REFERENCES genres ON DELETE SET NULL
+);
+
+INSERT INTO movieGenres (movie_id, genre_id) VALUES
+  (1, 2),
+  (1, 1),
+  (2, 3),
+  (3, 3);
 `;
 
 async function main() {
