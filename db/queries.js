@@ -8,24 +8,35 @@ async function selectMovies() {
     return rows;
 }
 
-async function insertMovie(title, yr_released) {
+async function insertMovie(title, yr_released, rating) {
     await pool.query(
-        "INSERT INTO movies (title, yr_released) VALUES ($1, $2)",
-        [title, yr_released]
+        "INSERT INTO movies (title, yr_released, rating) VALUES ($1, $2, $3)",
+        [title, yr_released, rating]
     );
 }
 
 async function selectMovie(movieId) {
-    const { rows } = await pool.query("SELECT * FROM movies WHERE id = ($1)", [
-        movieId,
-    ]);
+    // Gets movie, including director name and director_id
+    const { rows } = await pool.query(
+        "SELECT movies.id, title, yr_released, rating, director_id, name FROM movies JOIN directors ON director_id = director.id WHERE movies.id = ($1)",
+        [movieId]
+    );
     return rows;
 }
 
-async function updateMovie(movieId, title, yr_released) {
+async function selectMovieGenre(movieId) {
+    // Gets genre of specific movie
+    const { rows } = await pool.query(
+        "SELECT * FROM genres WHERE id IN (SELECT genre_id FROM movieGenres WHERE movie_id = ($1))",
+        [movieId]
+    );
+    return rows;
+}
+
+async function updateMovie(movieId, title, yr_released, rating) {
     await pool.query(
-        "UPDATE movies SET title = ($2), yr_released = ($3) WHERE id = ($1)",
-        [movieId, title, yr_released]
+        "UPDATE movies SET title = ($2), yr_released = ($3), rating = ($4) WHERE id = ($1)",
+        [movieId, title, yr_released, rating]
     );
 }
 
@@ -48,6 +59,15 @@ async function selectGenre(genreId) {
     const { rows } = await pool.query("SELECT * FROM genres WHERE id = ($1)", [
         genreId,
     ]);
+    return rows;
+}
+
+async function selectGenreMovie(genreId) {
+    // Gets all movies of specific genre
+    const { rows } = await pool.query(
+        "SELECT * FROM movies WHERE id IN (SELECT movie_id FROM movieGenres WHERE genre_id = ($1))",
+        [genreId]
+    );
     return rows;
 }
 
@@ -81,6 +101,14 @@ async function selectDirector(directorId) {
     return rows;
 }
 
+async function selectDirectorMovie(directorId) {
+    const { rows } = await pool.query(
+        "SELECT movies.id, title, yr_released, rating, director_id, name FROM movies JOIN directors ON director_id = director.id WHERE diectors.id = ($1)",
+        [directorId]
+    );
+    return rows;
+}
+
 async function updateDirector(directorId, name) {
     await pool.query("UPDATE directors SET name = ($2) WHERE id = ($1)", [
         directorId,
@@ -96,16 +124,19 @@ module.exports = {
     selectMovies,
     insertMovie,
     selectMovie,
+    selectMovieGenre,
     updateMovie,
     deleteMovie,
     selectGenres,
     insertGenre,
     selectGenre,
+    selectGenreMovie,
     updateGenre,
     deleteGenre,
     selectDirectors,
     insertDirector,
     selectDirector,
+    selectDirectorMovie,
     updateDirector,
     deleteDirector,
 };
