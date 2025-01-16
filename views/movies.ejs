@@ -25,6 +25,12 @@
                 <input type="text" name="title" id="title" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.title %>"/>
                 <label for="year">Year Released: </label>
                 <input type="text" name="year" id="year" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.year %>"/>
+                <label for="rating">Rating: </label>
+                <input type="text" name="rating" id="rating" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.rating %>"/>
+                <label for="director">Director: </label>
+                <input type="text" name="director" id="director" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.director %>"/>
+                <label for="genre">Genre: </label>
+                <input type="text" name="genre" id="genre" value= "<%= locals.movieEntry === undefined ? '' : movieEntry.genre %>"/>
                 <button type="submit">Submit</button>
             </form>
             <% if (errors) { %>

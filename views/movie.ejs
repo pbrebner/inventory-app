@@ -8,7 +8,13 @@
         <%- include('header'); -%>
         <main>
             <h1><%= title %></h1>
-            <p><%= movie.yr_released %></p>
+            <p>Year Released: <%= movie.yr_released %></p>
+            <p>Rating: <%= movie.rating %></p>
+            <p>Director: <%= movie.director %></p>
+            <p>Genres: </p>
+            <% if (genres) {genres.forEach((genre) => { %>
+                <p><%= genre.genre %></p>
+            <% })} %>
 
             <h2>Edit Movie</h2>
             <form action=<%= `/movies/${movie.id}/edit` %> method="GET">
