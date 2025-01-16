@@ -12,7 +12,7 @@
                 <ul>
                     <% directors.forEach(function(director) { %>
                         <a href= <%= `/directors/${director.id}` %> >
-                            <li>Name: <%= director.name %> </li>
+                            <li><%= director.name %> </li>
                         </a>
                     <% }); %>
                 </ul>
@@ -21,7 +21,7 @@
             <% } %>
             <h2>Add New Director</h2>
             <form action="/directors" method="POST">
-                <label for="name">Director: </label>
+                <label for="name">Name: </label>
                 <input type="text" name="name" id="name" value= "<%= locals.directorEntry === undefined ? '' : directorEntry.name %>"/>
                 <button type="submit">Submit</button>
             </form>
