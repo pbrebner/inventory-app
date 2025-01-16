@@ -104,15 +104,25 @@ async function insertDirector(name) {
 
 async function selectDirector(directorId) {
     const { rows } = await pool.query(
-        "SELECT movies.id, title, yr_released, rating, director_id, name AS director FROM movies JOIN directors ON director_id = directors.id WHERE directors.id = ($1)",
+        "SELECT * FROM directors WHERE id = ($1)",
         [directorId]
     );
     return rows;
 }
+
 async function selectDirectorByName(name) {
     const { rows } = await pool.query(
         "SELECT * FROM directors WHERE name = ($1)",
         [name]
+    );
+    return rows;
+}
+
+async function selectDirectorMovies(directorId) {
+    // Get all movies by a specific director
+    const { rows } = await pool.query(
+        "SELECT movies.id AS id, title, yr_released, rating FROM movies JOIN directors ON director_id = directors.id WHERE directors.id = ($1)",
+        [directorId]
     );
     return rows;
 }
@@ -186,6 +196,7 @@ module.exports = {
     insertDirector,
     selectDirector,
     selectDirectorByName,
+    selectDirectorMovies,
     updateDirector,
     deleteDirector,
     selectMovieGenre,
