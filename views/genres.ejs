@@ -12,7 +12,7 @@
                 <ul>
                     <% genres.forEach(function(genre) { %>
                         <a href= <%= `/genres/${genre.id}` %> >
-                            <li>Genre: <%= genre.genre %> </li>
+                            <li><%= genre.genre %> </li>
                         </a>
                     <% }); %>
                 </ul>
