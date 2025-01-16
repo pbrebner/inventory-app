@@ -8,14 +8,26 @@ const validateMovie = [
     body("title")
         .trim()
         .isLength({ min: 1, max: 100 })
-        .withMessage("Title must be between 1 and 100 characters")
+        .withMessage("Title must be between 1 and 100 characters.")
         .escape(),
     body("year")
         .trim()
-        .isNumeric()
-        .withMessage("Year must be numeric")
-        .isLength({ min: 4, max: 4 })
-        .withMessage("Year must be a valid 4 digit year")
+        .isNumeric({ min: 1900, max: 2025 })
+        .withMessage("Year must be between 1900 and 2025.")
+        .escape(),
+    body("rating")
+        .trim()
+        .isNumeric({ min: 0, max: 10 })
+        .withMessage("Rating must be number between 0 and 10.")
+        .escape(),
+    body("director")
+        .trim()
+        .isLength({ min: 1, max: 100 })
+        .withMessage("Director name must be between 1 and 100 characters")
+        .escape(),
+    body("genre")
+        .isLength({ min: 1, max: 100 })
+        .withMessage("Genre must be between 1 and 100 characters")
         .escape(),
 ];
 
@@ -45,11 +57,47 @@ exports.createMovie = [
                 movieEntry: {
                     title: req.body.title,
                     year: req.body.year,
+                    rating: req.body.rating,
+                    director: req.body.director,
+                    genre: req.body.genre,
                 },
                 errors: errors.array(),
             });
         } else {
-            await db.insertMovie(req.body.title, req.body.year);
+            let director = await db.selectDirectorByName(req.body.director);
+            let genre = await db.selectGenreByGenre(req.body.genre);
+            let movieId = "";
+            console.log(director);
+            console.log(genre);
+
+            if (director) {
+                let newMovie = await db.insertMovie(
+                    req.body.title,
+                    req.body.year,
+                    req.body.rating,
+                    director[0].id
+                );
+                console.log(newMovie);
+                movieId = newMovie[0].id;
+            } else {
+                let newDirector = await db.insertDirector(req.body.director);
+                let newMovie = await db.insertMovie(
+                    req.body.title,
+                    req.body.year,
+                    req.body.rating,
+                    newDirector[0].id
+                );
+                console.log(newMovie);
+                movieId = newMovie[0].id;
+            }
+
+            if (genre) {
+                await db.insertMovieGenre(movieId, genre[0].id);
+            } else {
+                let newGenre = await db.insertGenre(req.body.genre);
+                await db.insertMovieGenre(movieId, newGenre[0].id);
+            }
+
             res.redirect("/movies");
         }
     }),
@@ -58,18 +106,25 @@ exports.createMovie = [
 // Get Movie
 exports.getMovie = asyncHandler(async (req, res, next) => {
     let movie = await db.selectMovie(req.params.movieId);
+    let genres = await db.selectMovieGenre(req.params.movieId);
+    console.log(movie);
+    console.log(genres);
     res.render("movie", {
         title: `${movie[0].title}`,
         movie: movie[0],
+        genres: genres,
     });
 });
 
 // Edit Movie Page
 exports.editMovie = asyncHandler(async (req, res, next) => {
     let movie = await db.selectMovie(req.params.movieId);
+    let genres = await db.selectMovieGenre(req.params.movieId);
+
     res.render("editMovie", {
         title: "Edit Movie",
         movie: movie[0],
+        genres: genres,
         errors: [],
     });
 });
@@ -83,15 +138,46 @@ exports.updateMovie = [
         if (!errors.isEmpty()) {
             res.render("editMovie", {
                 title: "Edit Movie",
-                movie: { title: req.body.title, yr_released: req.body.year },
+                movie: {
+                    title: req.body.title,
+                    yr_released: req.body.year,
+                    rating: req.body.rating,
+                    director: req.body.director,
+                    genre: req.body.genre,
+                },
                 errors: errors.array(),
             });
         } else {
-            await db.updateMovie(
-                req.params.movieId,
-                req.body.title,
-                req.body.year
-            );
+            let director = await db.selectDirectorByName(req.body.director);
+            let genre = await db.selectGenreByGenre(req.body.genre);
+            let movieId = "";
+
+            if (director) {
+                let updateMovie = await db.updateMovie(
+                    req.body.title,
+                    req.body.year,
+                    req.body.rating,
+                    director[0].id
+                );
+                movieId = updateMovie[0].id;
+            } else {
+                let newDirector = await db.insertDirector(req.body.director);
+                let updateMovie = await db.updateMovie(
+                    req.body.title,
+                    req.body.year,
+                    req.body.rating,
+                    newDirector[0].id
+                );
+                movieId = updateMovie[0].id;
+            }
+
+            if (genre) {
+                await db.updateMovieGenre(movieId, genre[0].id);
+            } else {
+                let newGenre = await db.insertGenre(req.body.genre);
+                await db.updateMovieGenre(movieId, newGenre[0].id);
+            }
+
             res.redirect("/movies");
         }
     }),
