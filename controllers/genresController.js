@@ -23,11 +23,11 @@ exports.createGenre = [
     validateGenre,
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
+        // Don't like having to query all again
+        let genres = await db.selectGenres();
 
         if (!errors.isEmpty()) {
             // Error Occured
-            // Don't like having to query again
-            let genres = await db.selectGenres();
             res.render("genres", {
                 title: "All Genres",
                 genres: genres,
@@ -37,8 +37,21 @@ exports.createGenre = [
                 errors: errors.array(),
             });
         } else {
-            await db.insertGenre(req.body.genre);
-            res.redirect("/genres");
+            let genre = await db.selectGenreByGenre(req.body.genre);
+
+            if (genre.length != 0) {
+                res.render("genres", {
+                    title: "All Genres",
+                    genres: genres,
+                    genreEntry: {
+                        genre: req.body.genre,
+                    },
+                    errors: [{ msg: "Genre already exists" }],
+                });
+            } else {
+                await db.insertGenre(req.body.genre);
+                res.redirect("/genres");
+            }
         }
     }),
 ];
@@ -46,9 +59,11 @@ exports.createGenre = [
 // Get Genre
 exports.getGenre = asyncHandler(async (req, res, next) => {
     let genre = await db.selectGenre(req.params.genreId);
+    let movies = await db.selectGenreMovie(req.params.genreId);
     res.render("genre", {
         title: `${genre[0].genre}`,
         genre: genre[0],
+        movies: movies,
     });
 });
 
@@ -63,6 +78,7 @@ exports.editGenre = asyncHandler(async (req, res, next) => {
 });
 
 // Update Genre
+// TODO: Figure out if movies should keep the updated genre
 exports.updateGenre = [
     validateGenre,
     asyncHandler(async (req, res, next) => {
@@ -82,6 +98,7 @@ exports.updateGenre = [
 ];
 
 // Delete Genre
+// TODO: Set genre to NULL on delete?
 exports.deleteGenre = asyncHandler(async (req, res, next) => {
     await db.deleteGenre(req.params.genreId);
     res.redirect("/genres");
