@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const db = require("../db/queries");
 
+// TODO: Update to handle multiple genres from select input (create and update)
 const validateMovie = [
     body("title")
         .trim()
@@ -34,9 +35,11 @@ const validateMovie = [
 // Get All Movies
 exports.getMovies = asyncHandler(async (req, res, next) => {
     let movies = await db.selectMovies();
+    let genres = await db.selectGenres();
     res.render("movies", {
         title: "All Movies",
         movies: movies,
+        genres: genres,
         errors: [],
     });
 });
@@ -107,8 +110,6 @@ exports.createMovie = [
 exports.getMovie = asyncHandler(async (req, res, next) => {
     let movie = await db.selectMovie(req.params.movieId);
     let genres = await db.selectMovieGenre(req.params.movieId);
-    console.log(movie);
-    console.log(genres);
     res.render("movie", {
         title: `${movie[0].title}`,
         movie: movie[0],
@@ -119,7 +120,16 @@ exports.getMovie = asyncHandler(async (req, res, next) => {
 // Edit Movie Page
 exports.editMovie = asyncHandler(async (req, res, next) => {
     let movie = await db.selectMovie(req.params.movieId);
-    let genres = await db.selectMovieGenre(req.params.movieId);
+    let movieGenres = await db.selectMovieGenre(req.params.movieId);
+    let genres = await db.selectGenres();
+
+    genres.forEach((genre) => {
+        if (movieGenres.some((obj) => obj.id === genre.id)) {
+            genre.selected = true;
+        } else {
+            genre.selcted = false;
+        }
+    });
 
     res.render("editMovie", {
         title: "Edit Movie",
