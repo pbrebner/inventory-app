@@ -146,7 +146,7 @@ async function deleteDirector(directorId) {
 // MOVIEGENRE QUERIES
 
 async function selectMovieGenre(movieId) {
-    // Gets genre of specific movie
+    // Gets genres of specific movie
     const { rows } = await pool.query(
         "SELECT * FROM genres WHERE id IN (SELECT genre_id FROM movieGenres WHERE movie_id = ($1))",
         [movieId]
@@ -171,10 +171,10 @@ async function insertMovieGenre(movieId, genreId) {
     return rows;
 }
 
-async function updateMovieGenre(movieId, genreId) {
+async function updateMovieGenre(id, movieId, genreId) {
     const { rows } = await pool.query(
-        "UPDATE moviegenres SET genre_id = ($2) WHERE movie_id = ($1) RETURNING id",
-        [movieId, genreId]
+        "UPDATE moviegenres SET movie_id = ($2), genre_id = ($3) WHERE id = ($1) RETURNING id",
+        [id, movieId, genreId]
     );
     return rows;
 }

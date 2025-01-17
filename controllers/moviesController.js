@@ -220,15 +220,18 @@ exports.updateMovie = [
                 );
             }
 
+            // Delete all previous moviegenres
+            await db.deleteMovieGenre(movieId);
+
             // Handle genre for each provided
             if (Array.isArray(selectedGenres)) {
                 selectedGenres.forEach(async (selectedGenre) => {
                     let genre = await db.selectGenreByGenre(selectedGenre);
-                    await db.updateMovieGenre(movieId, genre[0].id);
+                    await db.insertMovieGenre(movieId, genre[0].id);
                 });
             } else {
                 let genre = await db.selectGenreByGenre(selectedGenres);
-                await db.updateMovieGenre(movieId, genre[0].id);
+                await db.insertMovieGenre(movieId, genre[0].id);
             }
 
             res.redirect("/movies");
