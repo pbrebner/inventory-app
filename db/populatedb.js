@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS movies (
   title TEXT,
   yr_released INTEGER,
   rating INTEGER,
-  director_id int REFERENCES directors ON DELETE SET NULL
+  director_id int REFERENCES directors ON DELETE NO ACTION
 );
 
 INSERT INTO movies (title, yr_released, rating, director_id) VALUES

@@ -76,7 +76,7 @@ exports.editDirector = asyncHandler(async (req, res, next) => {
     let director = await db.selectDirector(req.params.directorId);
     res.render("editDirector", {
         title: "Edit Director",
-        director: director[0].name,
+        director: director[0],
         errors: [],
     });
 });
@@ -102,6 +102,20 @@ exports.updateDirector = [
 
 // Delete Director
 exports.deleteDirector = asyncHandler(async (req, res, next) => {
-    await db.deleteDirector(req.params.directorId);
-    res.redirect("/directors");
+    let directorMovies = await db.selectDirectorMovies(req.params.directorId);
+
+    if (directorMovies.length != 0) {
+        let director = await db.selectDirector(req.params.directorId);
+
+        res.render("editDirector", {
+            title: "Edit Director",
+            director: director[0],
+            errors: [
+                { msg: "Can't delete director with movies in inventory." },
+            ],
+        });
+    } else {
+        await db.deleteDirector(req.params.directorId);
+        res.redirect("/directors");
+    }
 });

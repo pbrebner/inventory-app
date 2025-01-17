@@ -24,7 +24,6 @@ const validateMovie = [
         .trim()
         .isLength({ min: 1, max: 100 })
         .withMessage("Director name must be between 1 and 100 characters")
-        .optional()
         .escape(),
 ];
 
@@ -78,7 +77,7 @@ exports.createMovie = [
                     title: req.body.title,
                     year: req.body.year,
                     rating: req.body.rating,
-                    director: req.body.director || "",
+                    director: req.body.director,
                 },
                 errors: errors.array(),
             });
