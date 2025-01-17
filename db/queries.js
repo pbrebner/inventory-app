@@ -171,13 +171,18 @@ async function insertMovieGenre(movieId, genreId) {
     return rows;
 }
 
-// Only works with movies having one genre
 async function updateMovieGenre(movieId, genreId) {
     const { rows } = await pool.query(
         "UPDATE moviegenres SET genre_id = ($2) WHERE movie_id = ($1) RETURNING id",
         [movieId, genreId]
     );
     return rows;
+}
+
+async function deleteMovieGenre(movieId) {
+    await pool.query("DELETE FROM moviegenres WHERE movie_id = ($1)", [
+        movieId,
+    ]);
 }
 
 module.exports = {
@@ -203,4 +208,5 @@ module.exports = {
     selectGenreMovie,
     insertMovieGenre,
     updateMovieGenre,
+    deleteMovieGenre,
 };
