@@ -48,8 +48,8 @@ INSERT INTO movies (title, yr_released, rating, director_id) VALUES
 
 CREATE TABLE IF NOT EXISTS movieGenres (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  movie_id int REFERENCES movies ON DELETE SET NULL,
-  genre_id int REFERENCES genres ON DELETE SET NULL
+  movie_id int REFERENCES movies ON DELETE CASCADE,
+  genre_id int REFERENCES genres ON DELETE CASCADE
 );
 
 INSERT INTO movieGenres (movie_id, genre_id) VALUES

@@ -78,7 +78,6 @@ exports.editGenre = asyncHandler(async (req, res, next) => {
 });
 
 // Update Genre
-// TODO: Figure out if movies should keep the updated genre
 exports.updateGenre = [
     validateGenre,
     asyncHandler(async (req, res, next) => {
@@ -98,7 +97,6 @@ exports.updateGenre = [
 ];
 
 // Delete Genre
-// TODO: Set genre to NULL on delete?
 exports.deleteGenre = asyncHandler(async (req, res, next) => {
     await db.deleteGenre(req.params.genreId);
     res.redirect("/genres");

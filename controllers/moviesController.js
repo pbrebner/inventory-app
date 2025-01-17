@@ -24,6 +24,7 @@ const validateMovie = [
         .trim()
         .isLength({ min: 1, max: 100 })
         .withMessage("Director name must be between 1 and 100 characters")
+        .optional()
         .escape(),
 ];
 
@@ -77,7 +78,7 @@ exports.createMovie = [
                     title: req.body.title,
                     year: req.body.year,
                     rating: req.body.rating,
-                    director: req.body.director,
+                    director: req.body.director || "",
                 },
                 errors: errors.array(),
             });
@@ -241,8 +242,8 @@ exports.updateMovie = [
 
 // Delete Movie
 exports.deleteMovie = asyncHandler(async (req, res, next) => {
+    //await db.deleteMovieGenre(req.params.movieId);
     await db.deleteMovie(req.params.movieId);
-    await db.deleteMovieGenre(req.params.movieId);
 
     res.redirect("/movies");
 });

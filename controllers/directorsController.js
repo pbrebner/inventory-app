@@ -82,7 +82,6 @@ exports.editDirector = asyncHandler(async (req, res, next) => {
 });
 
 // Update Director
-// TODO: Figure out if movies should keep the updated director
 exports.updateDirector = [
     validateDirector,
     asyncHandler(async (req, res, next) => {
@@ -102,7 +101,6 @@ exports.updateDirector = [
 ];
 
 // Delete Director
-// TODO: Set director to NULL on delete?
 exports.deleteDirector = asyncHandler(async (req, res, next) => {
     await db.deleteDirector(req.params.directorId);
     res.redirect("/directors");
