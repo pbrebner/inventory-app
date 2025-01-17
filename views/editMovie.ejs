@@ -17,8 +17,21 @@
                 <input type="text" name="rating" id="rating" value= "<%= movie.rating %>"/>
                 <label for="director">Director: </label>
                 <input type="text" name="director" id="director" value= "<%= movie.director %>"/>
-                <label for="genre">Genre: </label>
-                <input type="text" name="genre" id="genre" value= "<%= movie.genre %>"/>
+                <label for="genre">Genres: </label>
+                <select name="genre" id="genre" multiple size="4">
+                    <% if (genres) { %>
+                        <option value="">--Please choose one or more options--</option>
+                        <% genres.forEach((genre) => { %>
+                            <% if (genre.selected) { %>
+                                <option value="<%= genre.genre %>" selected><%= genre.genre %></option>
+                            <% } else { %>
+                                <option value="<%= genre.genre %>"><%= genre.genre %></option>
+                            <% } %>
+                        <% }); %>
+                    <% } else { %>
+                        <option value="">--Add genres on genres page.--</option>
+                    <% } %>
+                </select>
                 <button type="submit">Edit</button>
             </form>
             
